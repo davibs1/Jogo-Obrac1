@@ -46,7 +46,7 @@
     </div>
 
     <div class="grid">
-      <!-- esquerda: controle/jogadores/log -->
+      
       <div class="panel">
         <div>
           <strong>Jogadores</strong>
@@ -64,7 +64,7 @@
         </div>
       </div>
 
-      <!-- direita: ações, dado, carta -->
+      
       <div class="panel" style="display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div style="display:flex;gap:12px;align-items:center">
@@ -106,11 +106,11 @@
             </div>
           </div>
 
-          <!-- área de opções (só usada para cartas especiais) -->
+          
           <div style="width:100%;margin-top:8px">
             <div id="options" class="options"></div>
 
-            <!-- área de palpite livre (só para cartas normais) -->
+            
             <div id="guessArea" style="margin-top:8px;display:none">
               <div class="guess-row">
                 <input id="guessInput" placeholder="Digite seu palpite"/>
@@ -135,12 +135,7 @@
   </div>
 
 <script>
-/* ===========================
-  Versão ajustada: alternativas SOMENTE nas cartas especiais.
-  Cartas normais: palpite livre com tolerância (Levenshtein + normalização).
-===========================*/
 
-/* Configurações/estado (mantive os valores do último código) */
 const GOAL = 40;
 const POINT_MAP = [8,6,4,2,1];
 const THEMES = [
@@ -151,7 +146,7 @@ const THEMES = [
 ];
 
 let cardPools = { personalidades_negras: [], locais: [], fatos_historicos: [], obras: [] };
-let players = []; // {name,score,lostTurn}
+let players = []; 
 let currentPlayerIndex = 0;
 let gameActive = false;
 let currentCard = null;
@@ -185,7 +180,7 @@ $('nextTurn').addEventListener('click', nextTurn);
 $('endGame').addEventListener('click', endGame);
 $('submitGuess').addEventListener('click', submitGuess);
 
-/* util */
+
 function log(msg){
   const now = new Date().toLocaleTimeString();
   logEl.innerHTML = `<div>[${now}] ${escapeHtml(msg)}</div>` + logEl.innerHTML;
@@ -215,10 +210,10 @@ function renderScoreboard(){
   scoreboardEl.innerHTML = players.map((p,i)=>`<div style="padding:6px;border-bottom:1px solid rgba(255,255,255,0.03)"><strong>${p.name}</strong> — ${p.score} pts</div>`).join('');
 }
 
-/* Carrega cartas (mesmo conteúdo do código anterior) */
+
 function loadAllCards(){
   const all = [
-    // PERSONALIDADES NEGRAS (normais)
+  
     {"theme":"personalidades_negras","type":"normal","word":"Pelé","hints":["conquistei três copas do mundo","sou o Rei do futebol","joguei pelo Santos Futebol Clube","também joguei pela Seleção Brasileira","morri em 2022","meu nome tem 4 letras"]},
     {"theme":"personalidades_negras","type":"normal","word":"Djamila Ribeiro","hints":["Sou uma filósofa, escritora e ativista","Escrevi o Pequeno Manual Antirracista","atuo no feminismo negro","meu sobrenome é Ribeiro","fui secretária de Direitos Humanos em SP","meu nome começa com “D”"]},
     {"theme":"personalidades_negras","type":"normal","word":"Michael Jackson","hints":["sou conhecido como o “Rei do Pop”","morri em 2009","“moonwalk” é o meu passo de dança","eu tinha vitiligo","muitos não me vêem como uma figura negra","Jackson é o meu sobrenome"]},
@@ -240,7 +235,7 @@ function loadAllCards(){
     {"theme":"personalidades_negras","type":"normal","word":"Tim Maia","hints":["meu apelido é uma rede de Internet","“Azul da Cor do Mar” é a minha música","meu sobrenome é “Maia”","sou muito conhecido pelo MPB","morri em 1998","influencio diferentes gerações"]},
     {"theme":"personalidades_negras","type":"normal","word":"Péricles","hints":["era vocalista do grupo Exaltasamba","“Deixa Acontecer” é a minha música","sou conhecido pelo pagode romântico","participei do The Voice Brasil","meu nome começa com “P”","faço música há mais de 30 anos"]},
 
-    // LOCAIS (normais)
+    
     {"theme":"locais","type":"normal","word":"Museu Afro Brasil","hints":["Moro em São Paulo","Nasci em 2004.","Emanoel Araújo é próximo de mim.","Dizem que vivo de passado.","Dou ênfase na valorização de aspectos da cultura de matriz africana.","Sou histórico, artístico e etnológico"]},
     {"theme":"locais","type":"normal","word":"Quilombo da Rasa","hints":["Sou uma comunidade.","Moro no Rio de Janeiro.","Fui criada por escravizadas.","Me formei através da busca de terras para o cultivo.","Sofro com a especulação imobiliária e a falta de reconhecimento de seus direitos à terra.","Quilombo está no meu nome."]},
     {"theme":"locais","type":"normal","word":"Roda de Samba da Pedra do Sal","hints":["Surgi no Rio de Janeiro.","Originei-me no século XIX.","Preservo a herança africana.","Roda está no meu nome.","Sou um símbolo de resistência cultural.","Sou considerada o berço do samba."]},
@@ -262,7 +257,7 @@ function loadAllCards(){
     {"theme":"locais","type":"normal","word":"Vale do Rio Niger","hints":["Sou um Rio.","Moro na Africa Ocidental.","Possuo uma grande extensão.","Me tornei um centro de civilizações antigas.","Minha criação foi influenciada por colonizadores europeus.","Sou um local de intercâmbio cultural e histórico."]},
     {"theme":"locais","type":"normal","word":"Praça da Sé","hints":["Resido em São Paulo.","Originei-me quando um lago foi reformado.","Sou um espaço público.","Estou no banco imobiliário.","Sou uma praça.","Possui uma catedral com meu nome."]},
 
-    // FATOS HISTÓRICOS (normais)
+  
     {"theme":"fatos_historicos","type":"normal","word":"Marcha Nacional das Mulheres Negras","hints":["Ocorri em 2015.","Sou um movimento de organização política e social.","Mulheres negras me criaram.","Aconteci em Brasília.","Meu objetivo é denunciar o racismo e a desigualdade social.","Marcha é uma parte do meu nome."]},
     {"theme":"fatos_historicos","type":"normal","word":"Aprovação da Lei Afonso Arinos","hints":["Ocorri em 1951.","O Congresso Nacional é próximo de mim.","Sou um marco para a luta antirracista.","Fui criada devido a uma situação com uma bailarina afro-americana.","Sou uma aprovação.","Meu nome é composto por um substantivo próprio."]},
     {"theme":"fatos_historicos","type":"normal","word":"Revolta dos alfaiates","hints":["Sou uma revolta.","Ocorri em Salvador.","A independência do Haiti e uma crise social e econômica deram origem a mim.","Aconteci em 1798.","A publicação de panfletos foi fundamental na organização da minha origem.","Classe pobre, soldados e a elite, me lideraram."]},
@@ -281,7 +276,7 @@ function loadAllCards(){
     {"theme":"fatos_historicos","type":"normal","word":"Massacre de Soweto","hints":["Sou fruto da rebelião negra.","Ocorri na África do Sul.","Aconteci em 1976.","15.000 pessoas morreram por minha causa.","Fui desencadeado pela repressão policial à passeata.","Sou um episódio sangrento."]},
     {"theme":"fatos_historicos","type":"normal","word":"Criação do Estatuto de Igualdade Racial","hints":["Fui originado em Brasília.","Aconteci em 2010.","Meu objetivo é combater a discriminação racial.","Igualdade está presente no meu nome.","Sou um Estatuto.","Quero assegurar o acesso pleno aos direitos fundamentais."]},
 
-    // OBRAS (normais)
+    
     {"theme":"obras","type":"normal","word":"Quarto de Despejo","hints":["eu fui publicado em 1960","o sobrenome da autora é Jesus","sou um livro autobiográfico","a escritora era moradora da favela","tenho vários erros ortográficos","a autora era catadora de papel"]},
     {"theme":"obras","type":"normal","word":"Olhos D'água","hints":["meu nome tem a palavra \"água\"","o povo afro-brasileiro é o meu foco","no meu título há um órgão da visão","sou um livro com 15 contos","a autora se chama Conceição Evaristo","na capa há uma olho castanho."]},
     {"theme":"obras","type":"normal","word":"Pequeno Manual Antirracista","hints":["violência, branquitude e cultura é o meu foco","sou um livro/manual","Djamila Ribeiro é a autora","AVANCE DUAS CASAS","a escritora é feminista, filósofa e ativista","a minha capa é amarela"]},
@@ -304,11 +299,11 @@ function loadAllCards(){
     {"theme":"obras","type":"normal","word":"Que Horas Ela Volta?","hints":["mostro a desigualdade entre patrões e empregados","o título faz uma pergunta sobre horário","questiono as regras de classe e os privilégios.","a protagonista se chama Val","de forma crítica e sensível trago as ≠ sociais","horário + ela volta? = título"]},
   ];
 
-  // reset pools and push
+ 
   cardPools = { personalidades_negras: [], locais: [], fatos_historicos: [], obras: [] };
   all.forEach(c => cardPools[c.theme].push(c));
 
-  // especiais (um em cada pilha) — intensificados
+  
   const special1 = {
     theme:'locais', type:'special', title:'BÚSSOLA LIBERTADORA',
     question:null, choices:null, answer:null,
@@ -359,7 +354,7 @@ function loadAllCards(){
   log('Cartas carregadas (incluindo 4 especiais).');
 }
 
-/* Dado */
+
 function rollDie(){
   if(!gameActive) return alert('Inicie uma nova partida (Nova partida) e adicione jogadores.');
   const player = players[currentPlayerIndex];
@@ -397,7 +392,6 @@ function showDieFace(face){
   else dieFaceEl.textContent = 'Face: ESCOLHA SEU TEMA';
 }
 
-/* Sorteio da carta; remove do baralho; prepara view */
 function drawCard(themeKey){
   const pool = cardPools[themeKey] || [];
   if(pool.length === 0) { alert('Sem cartas nesse tema.'); return; }
@@ -412,10 +406,10 @@ function prepareCardView(card, themeKey){
   optionsLocked = false;
   cardTitle.textContent = card.type === 'special' ? `Carta Especial — ${card.title || 'Especial'}` : `Tema — ${themeKey.toUpperCase().replace('_',' ')}`;
   cardMeta.textContent = card.type === 'special' ? (card.effect?.text || '') : `Adivinhe: escreva o nome da palavra em questão`;
-  // clear areas
+ 
   optionsEl.innerHTML = '';
   guessArea.style.display = 'none';
-  // normal cards -> show first hint (if exists), show guess area
+  
   if(card.type === 'normal'){
     guessArea.style.display = 'block';
     if(card.hints && card.hints.length > 0){
@@ -429,29 +423,29 @@ function prepareCardView(card, themeKey){
     hintsUsedEl.textContent = hintsUsed;
     cardPointsEl.textContent = currentCardPoints;
   } else {
-    // special: show question and multiple choice buttons (single attempt)
+    
     guessArea.style.display = 'none';
     if(card.question){
       currentHintEl.textContent = card.question;
     } else {
       currentHintEl.textContent = card.effect?.text || '';
     }
-    // build choices only for specials that have choices; instant specials get a single "Ativar" button
+   
     if(card.choices && card.choices.length){
       renderOptionsForSpecial(card, card.choices, card.answer);
     } else if(card.question && (!card.choices || card.choices.length === 0)){
-      // fallback: show 4 generic options (not ideal but keeps UI consistent)
+      
       const fallback = ['Opção A','Opção B','Opção C','Opção D'];
       renderOptionsForSpecial(card, fallback, card.answer !== undefined ? card.answer : 0);
     } else {
-      // instant effect
+      
       renderOptionsForSpecial(card, ['Ativar carta (sem escolha múltipla)'], 0, true);
     }
   }
   updateStatus();
 }
 
-/* Render multiple-choice for special cards only */
+
 function renderOptionsForSpecial(card, choices, correctIndex, instant=false){
   optionsEl.innerHTML = '';
   choices.forEach((c,i)=>{
@@ -472,7 +466,7 @@ function renderOptionsForSpecial(card, choices, correctIndex, instant=false){
           applySpecialEffect(card, true);
         } else {
           log(`${players[currentPlayerIndex].name} escolheu alternativa INCORRETA na carta especial "${card.title}".`);
-          // incorrect -> no effect; next player's turn
+         
           setTimeout(nextTurn, 600);
         }
       }
@@ -487,7 +481,7 @@ function renderOptionsForSpecial(card, choices, correctIndex, instant=false){
   optionsEl.appendChild(note);
 }
 
-/* Palpite livre para cartas normais */
+
 function submitGuess(){
   if(!currentCard) return alert('Gire o dado e tire uma carta primeiro.');
   if(currentCard.type !== 'normal') return alert('Este campo é apenas para cartas normais. Use as alternativas para cartas especiais.');
@@ -507,13 +501,13 @@ function submitGuess(){
   } else {
     log(`${player.name} errou (digitou "${guessRaw}").`);
     guessInput.value='';
-    // allow retries for normal cards (user didn't restrict), but you can change this if you want one attempt only for normals.
+
     setTimeout(nextTurn,600);
   }
   updateStatus();
 }
 
-/* Dicas e revelar (normais) */
+
 function askHint(){
   if(!currentCard) return alert('Gire o dado para tirar uma carta primeiro.');
   if(currentCard.type === 'special'){ alert('Cartas especiais não têm dicas sequenciais. Responda pela alternativa.'); return; }
@@ -528,7 +522,7 @@ function askHint(){
 function revealWord(){
   if(!currentCard) return alert('Gire o dado primeiro.');
   if(currentCard.type === 'special'){ alert('Carta especial — não há "revelar palavra".'); return; }
-  // reveal by showing correct word in currentHint and set points to 0
+  
   currentHintEl.textContent = `Resposta: ${currentCard.word || '—'}`;
   currentCardPoints = 0;
   hintsUsed = currentCard.hints ? currentCard.hints.length : 0;
@@ -538,10 +532,9 @@ function revealWord(){
   setTimeout(nextTurn,700);
 }
 
-/* compute points (based on hintsUsed) */
+
 function computePoints(){ const used = Math.max(1, hintsUsed || 1); return POINT_MAP[Math.min(used-1, POINT_MAP.length-1)]; }
 
-/* Aplica efeitos das cartas especiais (mesma lógica da versão anterior) */
 function applySpecialEffect(card, answeredCorrectly){
   const player = players[currentPlayerIndex];
   const eff = card.effect || {};
@@ -643,7 +636,7 @@ function applySpecialEffect(card, answeredCorrectly){
   setTimeout(nextTurn,700);
 }
 
-/* helpers e fluxo de turno */
+
 function askHint(){ if(!currentCard) return alert('Gire o dado antes.'); if(currentCard.type==='special'){ alert('Cartas especiais não têm dicas sequenciais. Responda pela alternativa.'); return; } const hints = currentCard.hints || []; if(hintsUsed >= hints.length){ alert('Sem mais dicas.'); return; } hintsUsed++; currentHintEl.textContent = hints[hintsUsed-1] || '—'; currentCardPoints = computePoints(); hintsUsedEl.textContent = hintsUsed; cardPointsEl.textContent = currentCardPoints; }
 function revealWord(){ if(!currentCard) return alert('Gire o dado primeiro.'); if(currentCard.type==='special'){ alert('Carta especial — não há revelar.'); return; } currentHintEl.textContent = `Resposta: ${currentCard.word || '—'}`; currentCardPoints = 0; hintsUsed = currentCard.hints ? currentCard.hints.length : 0; hintsUsedEl.textContent = hintsUsed; cardPointsEl.textContent = currentCardPoints; log(`${players[currentPlayerIndex].name} revelou (0 pts).`); setTimeout(nextTurn,700); }
 function computePoints(){ const used = Math.max(1, hintsUsed || 1); return POINT_MAP[Math.min(used-1, POINT_MAP.length-1)]; }
@@ -655,12 +648,12 @@ function clearCardDisplay(){ cardTitle.textContent='—'; cardMeta.textContent='
 function faceLabel(face){ if(face>=0 && face<=3) return THEMES[face].label; if(face===4) return 'PERDE A VEZ'; return 'ESCOLHA SEU TEMA'; }
 function checkVictory(player){ if(player.score >= GOAL){ player.score = GOAL; renderPlayers(); alert(`${player.name} atingiu ${GOAL} pts e venceu!`); gameActive=false; } }
 
-/* tolerant match (normalize + levenshtein) for normal card guesses */
+
 function normalizeText(s){ return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\w\s]/g,'').toLowerCase().trim(); }
 function levenshtein(a,b){ const m=a.length,n=b.length; const dp=Array.from({length:m+1},()=>Array(n+1).fill(0)); for(let i=0;i<=m;i++)dp[i][0]=i; for(let j=0;j<=n;j++)dp[0][j]=j; for(let i=1;i<=m;i++){ for(let j=1;j<=n;j++){ const cost = a[i-1]===b[j-1]?0:1; dp[i][j]=Math.min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+cost); }} return dp[m][n]; }
 function tolerantMatch(a,b){ const A=normalizeText(a), B=normalizeText(b); if(!B) return false; if(A===B) return true; if(A.includes(B) || B.includes(A)) return true; const dist = levenshtein(A,B); const tol = Math.max(1, Math.floor(B.length * 0.25)); return dist <= tol; }
 
-/* inicialização */
+
 loadAllCards();
 updateStatus();
 log('Jogo pronto. Adicione jogadores e clique em "Nova partida".');
